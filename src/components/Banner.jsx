@@ -1,12 +1,22 @@
-import React from "react";
+import { useContext } from "react";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router";
+import { MyStoreContext } from "../context/ShopContext";
 
-const Banner = ({
-  greeting = "GOOD EVENING 👋",
-  userName = "Ram Naam",
-}) => {
-  let navigate = useNavigate();
+const Banner = ({ greeting, userName }) => {
+  const navigate = useNavigate();
+  const { user } = useContext(MyStoreContext) || {};
+
+  const currentHour = new Date().getHours();
+  const autoGreeting =
+    currentHour < 12
+      ? "GOOD MORNING 👋"
+      : currentHour < 18
+      ? "GOOD AFTERNOON 👋"
+      : "GOOD EVENING 👋";
+
+  const displayGreeting = greeting || autoGreeting;
+  const displayName = userName || user?.name || "Shopper";
   return (
     <div
       className="relative w-full rounded-3xl border border-white bg-ink overflow-hidden p-6 sm:p-8 lg:p-10 font-body"
@@ -23,13 +33,13 @@ const Banner = ({
         <div className="max-w-2xl">
           {/* Greeting Tag */}
           <p className="font-heading text-xs sm:text-sm font-semibold tracking-wider text-volt uppercase mb-3 sm:mb-4">
-            {greeting}
+            {displayGreeting}
           </p>
 
           {/* Heading */}
           <h1 className="font-heading text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight leading-tight">
             <span className="text-txt block">Welcome back,</span>
-            <span className="text-volt block mt-1">{userName}!</span>
+            <span className="text-volt block mt-1">{displayName}!</span>
           </h1>
 
           {/* Description */}

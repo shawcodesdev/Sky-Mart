@@ -16,6 +16,33 @@ export const MyStoreProvider = ({ children }) => {
     }
   });
 
+  const [user, setUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem("skymart_user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const loginUser = (userData) => {
+    setUser(userData);
+    try {
+      localStorage.setItem("skymart_user", JSON.stringify(userData));
+    } catch (e) {
+      console.error("Failed to save user to localStorage:", e);
+    }
+  };
+
+  const logoutUser = () => {
+    setUser(null);
+    try {
+      localStorage.removeItem("skymart_user");
+    } catch (e) {
+      console.error("Failed to remove user from localStorage:", e);
+    }
+  };
+
   useEffect(() => {
     try {
       localStorage.setItem("skymart_cart", JSON.stringify(cart));
@@ -126,6 +153,9 @@ export const MyStoreProvider = ({ children }) => {
         removeFromCart,
         updateQuantity,
         clearCart,
+        user,
+        loginUser,
+        logoutUser,
       }}>
       {children}
     </MyStoreContext.Provider>
