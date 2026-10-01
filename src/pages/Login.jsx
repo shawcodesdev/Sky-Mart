@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useLocation } from "react-router";
 import { Zap, Mail, Lock, Eye, EyeOff, ArrowRight } from "lucide-react";
 import { MyStoreContext } from "../context/ShopContext";
 
@@ -8,6 +8,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginSuccess, setLoginSuccess] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const { loginUser } = useContext(MyStoreContext) || {};
 
   const {
@@ -33,8 +34,9 @@ const Login = () => {
     loginUser?.({ name: derivedName || "Shopper", email: data.email });
     console.log("Login data:", data);
     setLoginSuccess(true);
+    const destination = location.state?.from?.pathname || "/";
     setTimeout(() => {
-      navigate("/");
+      navigate(destination, { replace: true });
     }, 800);
   };
 
